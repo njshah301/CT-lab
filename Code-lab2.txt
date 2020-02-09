@@ -1,0 +1,112 @@
+%%figure 1
+close all;
+clear all;
+clc;
+EsNodB=-10:0.1:10;
+EsNolin=10.^((EsNodB)./10);
+etab=log2(1+EsNolin);
+figure(1)
+plot(EsNodB,etab);
+xlabel('EsNodB');
+ylabel('nb in bps/Hz')
+grid on;
+
+%% figure#2
+close all;
+clc;
+B=0:0.1:10;
+Ps1dB=0;
+Ps2dB=12;
+Ps1lin=10^(Ps1dB/10);
+Ps2lin=10^(Ps2dB/10);
+No=1;
+Pn=No*B;
+
+C1=B.*log2(1+Ps1lin./Pn);
+C2=B.*log2(1+Ps2lin./Pn);
+
+figure(2)
+plot(B,C1);
+hold on;
+plot(B,C2);
+legend('C1','C2');
+xlabel('B in Hz');
+ylabel('C in bps');
+grid on;
+%% figure#3
+PsdB=-5:0.1:10;
+Pslin=10.^(PsdB./10);
+B1=1;
+B2=2;
+B3=10;
+No=1;
+Pn1=No*B1;
+Pn2=No*B2;
+Pn3=No*B3;
+C1=B1.*log2(1+(Pslin./Pn1));
+C2=B2.*log2(1+(Pslin./Pn2));
+C3=B3.*log2(1+(Pslin./Pn3));
+
+figure(3)
+plot(PsdB,C1);
+hold on;
+plot(PsdB,C2);
+hold on;
+plot(PsdB,C3);
+legend('C1','C2','C3');
+xlabel('PsdB');
+ylabel('C in bps');
+grid on;
+%% Figure#4
+B=0:0.1:10;
+C1=1;
+C2=5;
+Pn=No*B;
+Ps1lin=Pn.*(2.^(C1./B)-1);
+Ps2lin=Pn.*(2.^(C2./B)-1);
+Ps1dB=10.*log10(Ps1lin);
+Ps2dB=10.*log10(Ps2lin);
+figure(4)
+plot(B,Ps1dB);
+hold on;
+plot(B,Ps2dB);
+legend('C1=1','C2=5');
+xlabel('B in Hz');
+ylabel('PsdB');
+grid on;
+%% Figure#5
+%Method 1
+etab=0:6;
+
+EbNolin=(2.^etab-1)./etab;
+EbNodB=10*log10(EbNolin);
+figure(5)
+plot(EbNodB,etab);
+hold on;
+
+xlabel('EbNodB');
+ylabel('etab in bps/Hz');
+grid on;
+%Method 2
+etab=0:6;
+EbNodB=-2:0.1:10;
+EbNolin=10.^(EbNodB./10);
+
+
+z=1;
+
+for i=1:length(EbNodB)
+    for j=1:7
+        for k=1:7
+    ans(z)=etab(j)-log2(1+(etab(k).*EbNolin(i))); 
+    z=z+1;
+        end
+    end
+end
+
+display(ans);
+for z=1:length(ans)
+    if ans(z)==0
+        display(EbNolin(rem(z,7)));
+    end
+end
